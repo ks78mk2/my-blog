@@ -12,5 +12,4 @@ RUN npm run build
 FROM nginx 
 EXPOSE 8080
 
-COPY ./default.conf /etc/nginx/conf.d/default.conf
 COPY --from=builder /app/build  /usr/share/nginx/html
