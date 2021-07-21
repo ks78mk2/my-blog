@@ -19,7 +19,7 @@
 
 # EXPOSE 8080
 
-FROM nginx
+FROM nginx:1.13.12-alpine
 
 # root 에 app 폴더를 생성
 RUN mkdir /app
