@@ -1,20 +1,40 @@
-FROM node:12.2.0-alpine
+# FROM node:12.2.0-alpine
 
+# RUN mkdir /app
+# RUN mkdir /app/front
+# WORKDIR /app/front
+
+# COPY ./package*.json ./
+# RUN npm install
+
+# COPY ./ ./
+
+# RUN npm run build
+
+# FROM nginx:1.13.12-alpine 
+# COPY ./nginx.conf /etc/nginx/nginx.conf
+# RUN mkdir /app
+# COPY /app/front /app
+
+
+# EXPOSE 8080
+
+FROM nginx
+
+# root 에 app 폴더를 생성
 RUN mkdir /app
-RUN mkdir /app/front
-WORKDIR /app/front
 
-COPY ./package*.json ./
-RUN npm install
+# work dir 고정
+WORKDIR /app
 
-COPY ./ ./
+# host pc의 현재경로의 build 폴더를 workdir 의 build 폴더로 복사
+ADD ./build /usr/share/nginx/html
 
-RUN npm run build
-
-FROM nginx:1.13.12-alpine 
+# host pc 의 nginx.conf 를 아래 경로에 복사
 COPY ./nginx.conf /etc/nginx/nginx.conf
-RUN mkdir /app
-COPY /app/front /app
 
-
+# 80 포트 오픈
 EXPOSE 8080
+
+# container 실행 시 자동으로 실행할 command. nginx 시작함
+CMD ["nginx", "-g", "daemon off;"]
