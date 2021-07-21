@@ -1,5 +1,6 @@
 FROM node:12.2.0-alpine
 
+RUN mkdir /app
 RUN mkdir /app/front
 WORKDIR /app/front
 
