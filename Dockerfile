@@ -11,6 +11,6 @@ RUN npm run build
 
 FROM nginx:1.13.12-alpine 
 COPY ./nginx.conf /etc/nginx/nginx.conf
-COPY ./build  /usr/share/nginx/html
+COPY --from=node:12.2.0-alpine /app/build  /usr/share/nginx/html
 
 EXPOSE 8080
