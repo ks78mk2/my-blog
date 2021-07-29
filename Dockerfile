@@ -1,24 +1,3 @@
-# FROM node:12.2.0-alpine
-
-# RUN mkdir /app
-# RUN mkdir /app/front
-# WORKDIR /app/front
-
-# COPY ./package*.json ./
-# RUN npm install
-
-# COPY ./ ./
-
-# RUN npm run build
-
-# FROM nginx:1.13.12-alpine 
-# COPY ./nginx.conf /etc/nginx/nginx.conf
-# RUN mkdir /app
-# COPY /app/front /app
-
-
-# EXPOSE 8080
-
 FROM nginx:1.13.12-alpine
 
 # root 에 app 폴더를 생성
