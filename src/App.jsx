@@ -1,8 +1,8 @@
 import { lazy, Suspense , useEffect, useState } from 'react'
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
-import GlobalContextProvider, { useGlobalContext } from './contexts/GlobalContext';
-import AccountsRouter from './routers/AccountsRouter';
-import ContentsRouter from './routers/ContentsRouter';
+import GlobalContextProvider, { useGlobalContext } from 'contexts/GlobalContext';
+import AccountsRouter from 'routers/AccountsRouter';
+import ContentsRouter from 'routers/ContentsRouter';
 
 const RoutercontentView = () => {
     return (
@@ -17,7 +17,7 @@ const RoutercontentView = () => {
                                 <Redirect to="/accounts" />
                             )
                         }}/>
-                        <Route exact path="*" component={}/>
+                        <Route path="*" component={() => { return ( <> <h1>404 not found</h1> </>)}}/>
                     </Switch>
                 </Suspense>
             </Router>  

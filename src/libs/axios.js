@@ -9,7 +9,7 @@ const HTTP_METHOD = {
 }
 
 const getConfig = (method, path, data) => {
-    const url = `${process.env.HOST}/${path}`
+    const url = `${process.env.API_HOST}/${path}`
     if (method && method.toUpperCase() === 'POST' && _url.indexOf('upload') === 0) {
         timeout = 120000
     }
