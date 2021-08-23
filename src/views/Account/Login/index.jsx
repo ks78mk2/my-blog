@@ -2,21 +2,27 @@ import { Carousel } from 'react-responsive-carousel';
 import 'assets/css/login.css'
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Formik } from 'formik'
+import { useState } from 'react'
 import * as Yup from 'yup'
 import LoginService from 'services/login'
 import {useGlobalContext} from 'contexts/GlobalContext';
 
 const LoginView = props => {
     const { setUserInfo } = useGlobalContext();
+    const [loginResult, setLoginResult] = useState({state: true, message: ''});
+    const [loginData, setLoginData] = useState({id: "guest", password: 'password'});
 
-    const login = async (loginData = { id:"guest", password:"null" }) => {
-        const {result , error} = await LoginService.login(loginData);
+    const login = async (data=null) => {
+        let _loginData = data;
+        if (!_loginData) {
+            _loginData = loginData;
+        }
+        const {result , error} = await LoginService.login(_loginData);
         if (error) {
-            console.log(errop);
+            setLoginResult({state: false, message : error.message});
         } else  {
-            console.log(result);
-            // setUserInfo()
-            // history.push('/contents');
+            setUserInfo({id :result.data.id, name: result.data.name, auth_level: result.data.auth_level});
+            window.location.href= "/contents";
         }
     }
 
@@ -61,7 +67,7 @@ const LoginView = props => {
                                         }),
                                     })}
                                     onSubmit={(values, { props, resetForm, setErrors, setSubmitting }) => {
-                                        onSubmit(values, setSubmitting, setErrors, resetForm)
+                                        login(values);
                                     }}
                                 >
                                 {({
@@ -87,6 +93,7 @@ const LoginView = props => {
                                                     }}
                                                     onChange={(e) => {
                                                         if(e.target) {
+                                                            setLoginData({...loginData, id: e.target.value});
                                                             setFieldValue('id', e.target.value)
                                                         }                                                        
                                                     }}
@@ -105,6 +112,7 @@ const LoginView = props => {
                                                     }}
                                                     onChange={(e) => {
                                                         if(e.target) {
+                                                            setLoginData({...loginData, password: e.target.value});
                                                             setFieldValue('password', e.target.value)
                                                         }
                                                     }}
@@ -124,9 +132,13 @@ const LoginView = props => {
                                     )
                                 }}    
                                 </Formik>
-
+                                
                                 <div style={{margin: "20px 0 0 0"}}>
-                                    <button className="btn btn-login float-right" style={{width : "76.05px"}} onClick={login}>Guest</button>                                        
+                                    { !loginResult.state && <div style={{float: "left"}}><p className="info-message negative">{loginResult.message}</p></div>}
+                                    <button className="btn btn-login float-right" style={{width : "76.05px"}} 
+                                        onClick={(e) => {
+                                            login({id: "guest", password: "password"});
+                                    }}>Guest</button>                                        
                                 </div>                                
                                 <div className="copy-text">Created with <i className="fa fa-heart"></i> by Jskim</div>
                             </div>
@@ -134,7 +146,7 @@ const LoginView = props => {
                                 <Carousel>
                                     <div className="carousel-item active">
                                         <img className="d-block img-fluid" src="https://static.pexels.com/photos/33972/pexels-photo.jpg" alt="First slide" style={{filter : "brightness(65%)"}}/>
-                                        <div className="carousel-caption d-none d-md-block">
+                                        <div className="carousel-caption d-md-block">
                                             <div className="banner-text">
                                                 <h2>WEB Developer</h2>
                                                 <p style={{ textAlign :"left"}}>
@@ -147,7 +159,7 @@ const LoginView = props => {
                                     </div>
                                     <div className="carousel-item active">
                                     <img className="d-block img-fluid" src="https://images.pexels.com/photos/7097/people-coffee-tea-meeting.jpg" alt="First slide" style={{filter : "brightness(65%)"}}/>
-                                        <div className="carousel-caption d-none d-md-block">
+                                        <div className="carousel-caption d-md-block">
                                             <div className="banner-text">
                                                 <h2>Go-Ahead</h2>
                                                 <p style={{ textAlign :"left"}}>

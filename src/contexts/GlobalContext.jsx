@@ -4,9 +4,9 @@ import _ from 'lodash';
 const GlobalContext = React.createContext({})
 
 const GlobalContextProvider = ({children}) => {
-    const [userInfo, setUserInfo] = useState({ id :null, auth_level: null });
+    const [userInfo, setUserInfo] = useState({ id :null, auth_level: null, name: null });
     const value = {
-        userInfo, setUserInfo
+        userInfo, setUserInfo,
     }
     return (
         <GlobalContext.Provider value={value}>

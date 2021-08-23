@@ -11,7 +11,6 @@ const HTTP_METHOD = {
 const getConfig = (method, path, data) => {
     const url = `${process.env.REACT_APP_HOST}${path}`
     let timeout = process.env.REACT_APP_API_TIMEOUT
-    console.log("sdf", process.env)
     let _method = new String(method);
     if (_method && _method.toUpperCase() === 'POST' && url.indexOf('upload') === 0) {
         timeout = 120000
@@ -44,23 +43,26 @@ const getConfig = (method, path, data) => {
 
 const request = async (method, path, data) => {
 
-    return new Promise(async (resolve, reject) => {
-        const {result, error} = await axiosRequest(method, path, data);
-
+    try {
+        const {result} = await axiosRequest(method, path, data);
+        return {result};
+    } catch (error) {
+        console.log(error)
         if (error.statusCode == 401) {  //AccessToken 만료 시 refresh
-            const {_result, _error} = await refresh_N_reReq(method, path, data); //재발급 및 재요청
-            if (_error) {
-                reject(history.push('/accounts/login'));
-            } else {
-                resolve(_result);
-            }
-
-        } else if (error) {
-            reject(error);
+            return await refresh(methods, path, data);
         } else {
-            resolve(result);
+            return error;
         }
-    })
+    }
+}
+
+const refresh = async (methods, path, data) => {
+    const {result, error} = await refresh_N_reReq(method, path, data); //재발급 및 재요청
+    if (error) {
+        window.location.href = '/accounts/login';
+    } else {
+        return {result};
+    }
 }
 
 const refresh_N_reReq = (method, path, data) => {
@@ -82,7 +84,7 @@ const axiosRequest = (method, path, data) => {
                 resolve({result: response.data});
             })
             .catch((error) => {
-                reject({error})
+                reject({error: error.response.data});
             })
     })
 }
