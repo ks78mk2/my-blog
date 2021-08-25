@@ -17,6 +17,7 @@ const RoutercontentView = () => {
                                 <Redirect to="/accounts" />
                             )
                         }}/>
+                        <Route path="/error" component={() => { return ( <> <h1>server Error</h1> </>)}}/>
                         <Route path="*" component={() => { return ( <> <h1>404 not found</h1> </>)}}/>
                     </Switch>
                 </Suspense>

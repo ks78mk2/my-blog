@@ -20,7 +20,8 @@ const LoginView = props => {
             res = await LoginService.login(loginData);
         }        
         if (res.error) {
-            setLoginResult({state: false, message : error.message});
+            console.log(res.error)
+            setLoginResult({state: false, message : res.error.message});
         } else  {
             const data = res.result.data;
             setUserInfo({id :data.id, name: data.name, auth_level: data.auth_level});
