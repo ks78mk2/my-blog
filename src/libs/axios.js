@@ -1,5 +1,6 @@
 import axios from 'axios';
 import qs from 'qs'
+axios.defaults.withCredentials = true
 
 const HTTP_METHOD = {
     GET: 'GET',
@@ -9,7 +10,13 @@ const HTTP_METHOD = {
 }
 
 const getConfig = (method, path, data) => {
-    const url = `${process.env.REACT_APP_HOST}${path}`
+    let url = ""
+    if (process.env.REACT_APP_MODE == "DEV") {
+        url = `/api/v1${path}`;
+    } else {
+        url = `${process.env.REACT_APP_HOST}${path}`
+    }
+
     let timeout = process.env.REACT_APP_API_TIMEOUT
     let _method = new String(method);
     if (_method && _method.toUpperCase() === 'POST' && url.indexOf('upload') === 0) {
@@ -47,7 +54,6 @@ const request = async (method, path, data) => {
         const {result} = await axiosRequest(method, path, data);
         return {result};
     } catch (error) {
-        console.log(error)
         if (error.statusCode == 401) {  //AccessToken 만료 시 refresh
             return await refresh(methods, path, data);
         } else {
@@ -81,6 +87,7 @@ const axiosRequest = (method, path, data) => {
     return new Promise((resolve, reject) => {
         promise
             .then((response) => {
+                console.log(response);
                 resolve({result: response.data});
             })
             .catch((error) => {

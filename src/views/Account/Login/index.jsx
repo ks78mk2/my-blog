@@ -8,21 +8,24 @@ import LoginService from 'services/login'
 import {useGlobalContext} from 'contexts/GlobalContext';
 
 const LoginView = props => {
-    const { setUserInfo } = useGlobalContext();
+    const { userInfo, setUserInfo } = useGlobalContext();
     const [loginResult, setLoginResult] = useState({state: true, message: ''});
-    const [loginData, setLoginData] = useState({id: "guest", password: 'password'});
+    const [loginData, setLoginData] = useState(null);
 
-    const login = async (data=null) => {
-        let _loginData = data;
-        if (!_loginData) {
-            _loginData = loginData;
-        }
-        const {result , error} = await LoginService.login(_loginData);
-        if (error) {
+    const login = async (id=null) => {
+        let res = {};
+        if (id == 'guest') {
+            res = await LoginService.guestLogin({id: 'guest'});
+        } else {
+            res = await LoginService.login(loginData);
+        }        
+        if (res.error) {
             setLoginResult({state: false, message : error.message});
         } else  {
-            setUserInfo({id :result.data.id, name: result.data.name, auth_level: result.data.auth_level});
-            window.location.href= "/contents";
+            const data = res.result.data;
+            setUserInfo({id :data.id, name: data.name, auth_level: data.auth_level});
+            localStorage.setItem('userInfo', JSON.stringify({id :data.id, name: data.name, auth_level: data.auth_level}));
+            props.history.push("/contents")
         }
     }
 
@@ -46,13 +49,14 @@ const LoginView = props => {
                                     validationSchema={Yup.object().shape({
                                         id: Yup.string().required('아이디를 입력바랍니다.')
                                         .test('id_valid', '아이디는 4~20자의 영문 또는 영문+숫자만 가능합니다.', (value, values) => {
+                                            
                                             return /^[a-zA-Z0-9]{4,20}$/.test(values.parent.id)
                                         }),
                                         password: Yup.string().required('비빌번호를 입력바랍니다.')
-                                        .test('password_valid', '비밀번호는 8~20자의 영문+숫자의 조합만 가능합니다.',(value, values) => {
+                                        .test('password_valid', '비밀번호는 8~20자의 영문+숫자+특수문자의 조합만 가능합니다.',(value, values) => {
                                             if (values.parent.password) {
                                                 const _password = values.parent.password;
-                                                if(!/^[a-zA-Z0-9]{4,20}$/.test(_password)) {
+                                                if(!/^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,20}$/.test(_password)) {
                                                     return false
                                                 }
     
@@ -83,7 +87,7 @@ const LoginView = props => {
                                     return (
                                         <form className="login-form" onSubmit={handleSubmit}>
                                             <div className="form-group">
-                                                <label htmlFor="exampleInputEmail1" className="text-uppercase">Username</label>
+                                                <label htmlFor="exampleInputEmail1" className="text-uppercase">ID</label>
                                                 <input type="text" className="form-control" placeholder="아이디를 입력해주세요." 
                                                     name="id"
                                                     id="id"
@@ -120,26 +124,32 @@ const LoginView = props => {
                                                 {(touched.password || submitCount > 0) && <p className="info-message negative" style={{margin : "5px 0 0 0"}}>{errors.password}</p>}
                                             </div>
                                             
+                                            {/* <div style={{margin: "20px 0 0 0"}}>
+                                                
+                                                <button className="btn btn-login float-right" style={{width : "76.05px"}} 
+                                                    onClick={(e) => {
+                                                        login({id: "guest", password: "password"});
+                                                }}>Guest</button>                                        
+                                            </div>   */}
                                             
-                                            <div className="form-check">
-                                                <label className="form-check-label">
+                                            <div style={{textAlign : "right"}}>
+                                                {/* <label className="form-check-label">
                                                 <input type="checkbox" className="form-check-input"/>
                                                 <small>Remember Me</small>
-                                                </label>
-                                                <button type="submit" className="btn btn-login float-right">Submit</button>                                        
+                                                </label> */}       
+                                                { !loginResult.state && <div style={{float: "left"}}><p className="info-message negative">{loginResult.message}</p></div>}              
+                                                <button type="submit" style={{width : "76.05px"}}  className="btn btn-login">Login</button>          
                                             </div>                        
+                                            <div style={{textAlign : "right"}}>
+                                                <button className="btn btn-login" style={{width : "76.05px", margin: "7px 0 0 0"}} 
+                                                onClick={(e) => {
+                                                    login('guest');
+                                                }}>Guest</button>
+                                            </div>
                                         </form>
                                     )
                                 }}    
                                 </Formik>
-                                
-                                <div style={{margin: "20px 0 0 0"}}>
-                                    { !loginResult.state && <div style={{float: "left"}}><p className="info-message negative">{loginResult.message}</p></div>}
-                                    <button className="btn btn-login float-right" style={{width : "76.05px"}} 
-                                        onClick={(e) => {
-                                            login({id: "guest", password: "password"});
-                                    }}>Guest</button>                                        
-                                </div>                                
                                 <div className="copy-text">Created with <i className="fa fa-heart"></i> by Jskim</div>
                             </div>
                             <div className="col-md-8 banner-sec">

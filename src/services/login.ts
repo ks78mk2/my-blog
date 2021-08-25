@@ -3,8 +3,16 @@ import { useGlobalContext } from 'contexts/GlobalContext'
 
 class LoginService {
     login(params: any) {
-        console.log("asdf", params);
-        return axios('POST', `/auth/login`, params);
+        return axios('POST', '/auth/login', params);
+    }
+    logout(params: any) {
+        return axios('POST', '/auth/logout', params);
+    }
+    guestLogin(params: any) {
+        return axios('POST', '/auth/login/guest', params);
+    }
+    guestLogout(params: any) {
+        return axios('POST', '/auth/logout/guest', params);
     }
 }
 
