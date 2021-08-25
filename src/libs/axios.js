@@ -10,12 +10,7 @@ const HTTP_METHOD = {
 }
 
 const getConfig = (method, path, data) => {
-    let url = ""
-    if (process.env.REACT_APP_MODE == "DEV") {
-        url = `/api/v1${path}`;
-    } else {
-        url = `${process.env.REACT_APP_HOST}${path}`
-    }
+    let url = `/api/v1${path}`;
 
     let timeout = process.env.REACT_APP_API_TIMEOUT
     let _method = new String(method);
