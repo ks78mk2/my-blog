@@ -1,5 +1,6 @@
 import axios from 'axios';
 import qs from 'qs'
+axios.defaults.withCredentials = true
 
 const HTTP_METHOD = {
     GET: 'GET',
@@ -9,14 +10,22 @@ const HTTP_METHOD = {
 }
 
 const getConfig = (method, path, data) => {
-    const url = `${process.env.API_HOST}/${path}`
-    if (method && method.toUpperCase() === 'POST' && _url.indexOf('upload') === 0) {
+    let url = ""
+    if (process.env.REACT_APP_MODE == "DEV") {
+        url = `/api/v1${path}`;
+    } else {
+        url = `${process.env.REACT_APP_HOST}${path}`
+    }
+
+    let timeout = process.env.REACT_APP_API_TIMEOUT
+    let _method = new String(method);
+    if (_method && _method.toUpperCase() === 'POST' && url.indexOf('upload') === 0) {
         timeout = 120000
     }
 
     let config = {
         timeout: timeout,
-        method: method.toUpperCase(),
+        method: _method.toUpperCase(),
         url,
         headers: {
             'Access-Control-Allow-Origin': '*',
@@ -39,45 +48,52 @@ const getConfig = (method, path, data) => {
     return config
 }
 
-export const request = async (method, path, data) => {
+const request = async (method, path, data) => {
 
-    return new Promise((resolve, reject) => {
-        const {Result, error} = await axiosRequest(method, path, data);
-
+    try {
+        const {result} = await axiosRequest(method, path, data);
+        return {result};
+    } catch (error) {
         if (error.statusCode == 401) {  //AccessToken 만료 시 refresh
-            const {Result, error} = await refresh_N_reReq(method, path, data); //재발급 및 재요청
-            if (error) {
-                reject(history.push('/accounts/login'));
-            } else {
-                resolve(Result);
-            }
-
-        } else if (error) {
-            reject(error);
+            return await refresh(methods, path, data);
         } else {
-            resolve(Result);
+            return error;
         }
-    })
-
+    }
 }
 
-const refresh_N_reReq = async (method, path, data) => {
-    const {error} = await axiosRequest('get', '/auth/refresh', undefined);
+const refresh = async (methods, path, data) => {
+    const {result, error} = await refresh_N_reReq(method, path, data); //재발급 및 재요청
+    if (error) {
+        window.location.href = '/accounts/login';
+    } else {
+        return {result};
+    }
+}
+
+const refresh_N_reReq = (method, path, data) => {
+    const {error} = axiosRequest('get', '/auth/refresh', undefined);
     if (error) {    //RefreshToken도 만료 됨
-        return {error};
+        return {result: null, error};
     } else {        //AccessToken 재발급 후 재 request 요청
-        return await axiosRequest(method, path, data);
+        return axiosRequest(method, path, data);
     }
 }
 
 const axiosRequest = (method, path, data) => {
     const config = getConfig(method, path, data);
     const promise = axios(config);
-    promise
-        .then(function (response) {
-            return {Result: response.data};
-        })
-        .catch(function (error) {
-            return {error}
-        })
+
+    return new Promise((resolve, reject) => {
+        promise
+            .then((response) => {
+                console.log(response);
+                resolve({result: response.data});
+            })
+            .catch((error) => {
+                reject({error: error.response.data});
+            })
+    })
 }
+
+export default request;
