@@ -1,16 +1,28 @@
 import "assets/vendor/fontawesome-free/css/all.min.css"
 import {usePageContext} from "contexts/PageContext"
 import {useGlobalContext} from "contexts/GlobalContext"
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 const NavBar = props => {
     const { userInfo } = useGlobalContext();
     const { pageChange } = usePageContext();
     const [toggled, setToggled] = useState(false);
+
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth)
+    useEffect(() => {
+        function reportWindowSize() {
+            setWindowWidth(window.innerWidth)
+            // if (window.innerWidth < 768) {
+            //     setToggled(true)
+            // }
+        }
+        window.addEventListener('resize', reportWindowSize)
+        return () => window.removeEventListener('resize', reportWindowSize)
+    }, [])
     
     return (
         <>
-            <ul className={`navbar-nav bg-gradient-primary sidebar sidebar-dark accordion ${toggled && "toggled"}`} id="accordionSidebar">
+            <ul className={`navbar-nav bg-gradient-primary sidebar sidebar-dark accordion ${(toggled) && "toggled"}`} id="accordionSidebar">
 
                 {/* <!-- Sidebar - Brand --> */}
                 <a className="sidebar-brand d-flex align-items-center justify-content-center" onClick={()=> { pageChange("intro"); }}>
