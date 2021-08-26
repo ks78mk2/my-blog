@@ -1,30 +1,19 @@
-import "assets/css/sb-admin-2.min.css"
 import "assets/vendor/fontawesome-free/css/all.min.css"
 import {usePageContext} from "contexts/PageContext"
 import {useGlobalContext} from "contexts/GlobalContext"
-import LoginService from 'services/login'
+import { useState } from 'react'
 
 const NavBar = props => {
     const { userInfo } = useGlobalContext();
-    const { movePage } = usePageContext();
+    const { pageChange } = usePageContext();
+    const [toggled, setToggled] = useState(false);
     
-    const logout = async () => {
-        const {result , error} = await LoginService.guestLogout({id: userInfo.id});
-        if (error) {
-            console.log(error)
-            window.location.href = "/accounts" 
-        } else  {
-            localStorage.removeItem('userInfo');
-            window.location.href = "/accounts" 
-        }
-    }
-
     return (
         <>
-            <ul className="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+            <ul className={`navbar-nav bg-gradient-primary sidebar sidebar-dark accordion ${toggled && "toggled"}`} id="accordionSidebar">
 
                 {/* <!-- Sidebar - Brand --> */}
-                <a className="sidebar-brand d-flex align-items-center justify-content-center" href="/contents">
+                <a className="sidebar-brand d-flex align-items-center justify-content-center" onClick={()=> { pageChange("intro"); }}>
                     <div className="sidebar-brand-icon rotate-n-15">
                         <i className="fas fa-laugh-wink"></i>
                     </div>
@@ -36,7 +25,7 @@ const NavBar = props => {
 
                 {/* <!-- Nav Item - Dashboard --> */}
                 <li className="nav-item active">
-                    <a className="nav-link" onClick={()=> { movePage("intro"); }}>
+                    <a className="nav-link" onClick={()=> { pageChange("intro"); }}>
                         <i className="far fa-id-card"></i>
                         <span>Introduce</span>
                     </a>
@@ -52,7 +41,7 @@ const NavBar = props => {
 
                 {/* <!-- Nav Item - Pages Collapse Menu --> */}
                 <li className="nav-item">
-                    <a className="nav-link" onClick={()=> { movePage("post"); }}>
+                    <a className="nav-link" onClick={()=> { pageChange("post"); }}>
                         <i className="fas fa-fw fa-list"></i>
                         <span>게시글</span>
                     </a>
@@ -60,7 +49,7 @@ const NavBar = props => {
 
                 {/* <!-- Nav Item - Free Board  --> */}
                 <li className="nav-item">
-                    <a className="nav-link" onClick={()=> { movePage("open-board"); }}>
+                    <a className="nav-link" onClick={()=> { pageChange("open-board"); }}>
                         <i className="fas fa-fw fa-keyboard"></i>
                         <span>자유게시판</span>
                     </a>
@@ -84,24 +73,19 @@ const NavBar = props => {
                 }
 
                 <li className="nav-item">
-                    <a className="nav-link" onClick={()=> { movePage("register"); }}>
+                    <a className="nav-link" onClick={()=> { pageChange("register"); }}>
                         <i className="fas fa-fw fa-user-plus"></i>
                         <span>회원가입</span>
                     </a>
                 </li>
 
-                
-                {/* { userInfo.id != "guest" && */}
-                    <li className="nav-item" style={{position: "absolute", bottom: "0"}}>
-                        <hr className="sidebar-divider" style={{marginBottom : "0px"}}/>
-                        <a className="nav-link" onClick={logout}>
-                            <i className="fas fa-fw fa-power-off"></i>
-                            <span>Logout</span>
-                        </a>
-                    </li>
-                {/* } */}
-                
+                {/* <!-- Divider --> */}
+                <hr className="sidebar-divider d-none d-md-block" />
 
+                {/* <!-- Sidebar Toggler (Sidebar) --> */}
+                <div className="text-center d-none d-md-inline">
+                    <button className="rounded-circle border-0" id="sidebarToggle" onClick={()=> { setToggled(!toggled) }}></button>
+                </div>
             </ul>
         </>
     )

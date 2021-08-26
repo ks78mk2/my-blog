@@ -1,7 +1,7 @@
 import 'assets/css/login.css'
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 
-const PostView = props => {
+const OpenBoardView = props => {
 
     return (
         <>
@@ -12,4 +12,4 @@ const PostView = props => {
     )
 }
 
-export default PostView
+export default OpenBoardView
