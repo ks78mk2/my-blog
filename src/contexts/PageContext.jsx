@@ -8,6 +8,20 @@ const PageContextProvider = ({children}) => {
     const [dropDownShow, setDropDownShow] = useState(false);
     const [pageTitle, setPageTitle] = useState("JSKIM'S INFORMATION");
 
+    const zoomIn = (event) => {
+        const target = event.target.closest('.scale')
+        target.style.transform = "scale(1.025)";
+        target.style.zIndex = 1;
+        target.style.transition = "all 0.5s";
+    }
+    
+    const zoomOut = (event) => {
+        const target = event.target.closest('.scale')
+        target.style.transform = "scale(1)";
+        target.style.zIndex = 0;
+        target.style.transition = "all 0.5s";
+    }
+
     const pageChange =(pageName) => {
         switch (pageName) {
             default:
@@ -27,7 +41,7 @@ const PageContextProvider = ({children}) => {
     }
 
     const value = {
-        page, dropDownShow, setDropDownShow, pageChange, pageTitle
+        page, dropDownShow, setDropDownShow, pageChange, pageTitle, zoomIn, zoomOut
     }
     return (
         <PageContext.Provider value={value}>

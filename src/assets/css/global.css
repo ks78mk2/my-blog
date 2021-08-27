@@ -585,6 +585,7 @@ pre code {
 .row {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   margin-right: -0.75rem;
   margin-left: -0.75rem;
 }
@@ -10515,6 +10516,7 @@ a:focus {
 @media (min-width: 768px) {
   .sidebar {
     width: 14rem !important;
+    transition: all 0.1s;
   }
   .sidebar .nav-item .collapse {
     position: relative;
@@ -10576,6 +10578,7 @@ a:focus {
   .sidebar.toggled {
     overflow: visible;
     width: 5.5rem !important;
+    transition: all 0.1s
   }
   .sidebar.toggled .nav-item .collapse {
     position: absolute;
@@ -11282,5 +11285,23 @@ footer.sticky-footer .copyright {
 }
 
 body.sidebar-toggled footer.sticky-footer {
+  width: 100%;
+}
+
+.div-board-right {
+  font-weight: 600;
+  color: black;
+  display: inline-block;
+  padding: 0 20px 0 0;
+  margin: 0 20px 0 0;
+  border-right : 2px solid #858796;
+}
+
+.margin-bottom-10 {
+  margin-bottom: 10px;
+}
+
+.card-in-div {
+  margin: 0 0 0 15px;
   width: 100%;
 }
