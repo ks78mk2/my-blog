@@ -87,7 +87,7 @@ const axiosRequest = (method, path, data) => {
             })
             .catch((error) => {
                 if (typeof error.response.data == 'string') {
-                    // window.location.href = '/error'
+                    window.location.href = '/error'
                 }
                 reject({error: error.response.data});
             })
