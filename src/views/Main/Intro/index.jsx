@@ -329,7 +329,7 @@ const IntroView = props => {
                                 <ProjectDesc title="Back-End" desc="Nest.js"></ProjectDesc>
                                 <ProjectDesc title="Domain" href="https://www.ks78mk2.ga"></ProjectDesc>
                                 <ProjectDesc title="GitHub" href="https://github.com/ks78mk2/myblog-docker"></ProjectDesc>
-                                <ProjectDesc title="Deployment" desc="Oracle Cloud, Docker, Jenkins, Github"></ProjectDesc>
+                                <ProjectDesc title="Deployment" desc="Oracle Cloud, Docker, Jenkins, Github, Nginx"></ProjectDesc>
                             </ProjectCard>
                         </div>
                     </div>
