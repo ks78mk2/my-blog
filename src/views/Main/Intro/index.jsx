@@ -131,8 +131,8 @@ const IntroView = props => {
                                     <InfoCard title="이름" value="김종성" color="primary" icon="user-alt" />
                                     <InfoCard title="생년월일" value="91.01.01" color="secondary" icon="calendar-alt"/>
                                     <InfoCard title="주소지" value="서울특별시 동작구" color="success" icon="map-marker-alt" />
-                                    <InfoCard title="연락처" value="010-2144-2818" color="info" icon="phone-alt"/>
-                                    <InfoCard title="이메일" value="ks78mk2@gmail.com" color="warning" icon="envelope" />
+                                    <InfoCard title="연락처" value="010-****-2818" color="info" icon="phone-alt"/>
+                                    <InfoCard title="이메일" value="k*****2@gmail.com" color="warning" icon="envelope" />
                                     <InfoCard title="개발" value="웹 프론트/백엔드" color="danger" icon="laptop-code" />
                                 </div>                                
                             </div>
